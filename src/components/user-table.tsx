@@ -21,7 +21,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { columns } from "./user-columns-table";
 
 declare module '@tanstack/react-table' {
-  //allows us to define custom properties for our columns
   interface ColumnMeta<TData extends RowData, TValue> {
     filterVariant?: 'text' | 'range' | 'select'
   }
@@ -31,7 +30,6 @@ export function UserTable() {
   const rerender = useReducer(() => ({}), {})[1];
   const [data, setData] = useState(() => makeData(100000));
   const refreshData = () => setData(() => makeData(100000));
-
 
   // const [sorting, setSorting] = useState<SortingState>({});
 
@@ -61,7 +59,7 @@ export function UserTable() {
   });
 
   return (
-    <div className="w-full">
+    <div className="w-full p-5">
       <div className="rounded-md border border-border bg-card">
         <div className="relative w-full overflow-auto">
           <table className="w-full caption-bottom text-sm">
@@ -81,7 +79,7 @@ export function UserTable() {
                       )}
 
                         {header.column.getCanFilter() ? (
-                          <div>
+                          <div className="w-full">
                             <Filter column={header.column} />
                           </div>
                         ) : null}     
@@ -351,7 +349,7 @@ function DebouncedInput({
 
   return (
     <div className="my-2">
-      <Input {...props} value={value} onChange={e => setValue(e.target.value)} />
+      <Input {...props} value={value} onChange={e => setValue(e.target.value)} className="w-full"/>
     </div>
   )
 }
