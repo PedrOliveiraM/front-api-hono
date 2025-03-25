@@ -11,37 +11,11 @@ import { Building, Building2, Edit, List, Plus, Search, Trash, User } from "luci
 import { NavUser } from "./sidebar-footer";
 import { SidebarOption } from "./sidebar-option";
 
-const userOrganizationFunctions = [
-  {
-    title: "Criar Relação",
-    url: "#",
-    icon: Plus,
-  },
-  {
-    title: "Listar",
-    url: "#",
-    icon: List,
-  },
-  {
-    title: "Buscar por Id",
-    url: "#",
-    icon: Search,
-  },
-  {
-    title: "Atualizar",
-    url: "#",
-    icon: Edit,
-  },
-  {
-    title: "Deletar",
-    url: "#",
-    icon: Trash,
-  }
-]
+
 const userFunctions = [
   {
     title: "Criar Relação",
-    url: "#",
+    url: "/create-user",
     icon: Plus,
   },
   {
@@ -65,6 +39,35 @@ const userFunctions = [
     icon: Trash,
   }
 ]
+
+const userOrganizationFunctions = [
+  {
+    title: "Criar Relação",
+    url: "",
+    icon: Plus,
+  },
+  {
+    title: "Listar",
+    url: "#",
+    icon: List,
+  },
+  {
+    title: "Buscar por Id",
+    url: "#",
+    icon: Search,
+  },
+  {
+    title: "Atualizar",
+    url: "#",
+    icon: Edit,
+  },
+  {
+    title: "Deletar",
+    url: "#",
+    icon: Trash,
+  }
+]
+
 const OrganizationFunctions = [
   {
     title: "Criar Relação",
@@ -117,17 +120,18 @@ const user: UserLogin = {
   avatar: "https://github.com/PedrOliveiraM.png"
 }
 
-
 export function AppSidebar() {
   return (
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel className="text-2xl mb-5">
-            <div className="flex gap-3 m-5">
-              <img src={vite} alt="Logo" className="w-10 h-10" />
-              Aplicação
-            </div>
+            <a href="/">
+              <div className="flex gap-3 m-5">
+                <img src={vite} alt="Logo" className="w-10 h-10" />
+                Aplicação
+              </div>
+            </a>
           </SidebarGroupLabel>
           <div className="flex flex-col gap-2">
             {options.map((option, index) => <SidebarOption key={index} icon={option.icon} functions={option.functions} title={option.title} />)}

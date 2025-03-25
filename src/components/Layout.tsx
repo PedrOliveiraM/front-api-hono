@@ -6,7 +6,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <SidebarProvider>
       <AppSidebar />
       <SidebarTrigger />
-      <main className="flex justify-center items-center min-h-screen p-5">
+      <main className="flex justify-center items-center min-h-screen p-5 w-full">
         <div className="w-full max-w-5xl overflow-auto">{children}</div>
       </main>
     </SidebarProvider>
