@@ -15,27 +15,27 @@ import { SidebarOption } from "./sidebar-option";
 const userFunctions = [
   {
     title: "Criar Relação",
-    url: "/create-user",
+    url: "/user/create-user",
     icon: Plus,
   },
   {
     title: "Listar",
-    url: "#",
+    url: "/user/list-user",
     icon: List,
   },
   {
     title: "Buscar por Id",
-    url: "#",
+    url: "/user/list-user-id",
     icon: Search,
   },
   {
     title: "Atualizar",
-    url: "#",
+    url: "/user/update-user",
     icon: Edit,
   },
   {
     title: "Deletar",
-    url: "#",
+    url: "/user/delete-user",
     icon: Trash,
   }
 ]
