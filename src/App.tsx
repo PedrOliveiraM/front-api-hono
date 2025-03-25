@@ -1,9 +1,12 @@
-import { Button } from "@/components/ui/button"
+import { UserTable } from "./components/user-table"
 
 function App() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-svh">
-      <Button>Click me</Button>
+    <div className="container mx-auto py-10 bg-[var(--background)]">
+      <h1 className="text-2xl font-bold mb-5">Users</h1>
+      <div className="bg-gray-200">
+      <UserTable/>
+      </div>
     </div>
   )
 }
