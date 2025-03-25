@@ -2,32 +2,46 @@
 import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { pageTypes } from "@/utils/pageTypes"
+import { usePageType } from "@/utils/usePageType"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useState } from "react"
 import { useForm } from "react-hook-form"
-import type { z } from "zod"
+import { toast } from "sonner"
+import { z } from "zod"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card"
-import { userFormSchema } from "./userSchem"
+import { userAddSchema, userEditSchema } from "./userSchema"
 
 export function UserForm() {
-  const form = useForm<z.infer<typeof userFormSchema>>({
-    resolver: zodResolver(userFormSchema),
-    defaultValues: {
-      name: "",
-      email: "",
-      password: "",
-      passwordConfirmation: "",
-    },
-  })
+  const [typeForm] = useState(pageTypes[usePageType()]);
+  const isCadastro = typeForm === "Cadastro";
 
-  function onSubmit(values: z.infer<typeof userFormSchema>) {
-    console.log(values)
+  type CurrentFormType = z.infer<typeof userAddSchema> | z.infer<typeof userEditSchema>;
+  const currentSchema: z.ZodType<CurrentFormType> = isCadastro ? userAddSchema : userEditSchema;
+
+  const form = useForm<CurrentFormType>({
+    resolver: zodResolver(currentSchema),
+  });
+
+  function onSubmit(values: CurrentFormType) {
+    console.log(values);
+
+    const promise = () => new Promise((resolve) => setTimeout(() => resolve({ name: 'Sonner' }), 2000));
+
+    toast.promise(promise, {
+      loading: 'Carregando...',
+      success: () => {
+        return `Usuário foi salvo com sucesso`;
+      },
+      error: 'Não foi possível salvar o usuário',
+    });
   }
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Formulário de cadastro</CardTitle>
-        <CardDescription>Cadastre um novo colaborador</CardDescription>
+        <CardTitle>Formulário de {typeForm}</CardTitle>
+        <CardDescription>{typeForm} de colaborador</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -79,14 +93,15 @@ export function UserForm() {
 
             <FormField
               control={form.control}
-              name="passwordConfirmation"
+              name={isCadastro ? "passwordConfirmation" : "newPassword"}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Confirmar Senha</FormLabel>
+                  <FormLabel>{isCadastro ? "Confirmar Senha" : "Nova Senha"}</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="Confirmar senha" {...field} />
+                    <Input type="password"
+                      placeholder={isCadastro ? "Confirmar Senha" : "insira sua nova Senha"} {...field} />
                   </FormControl>
-                  <FormDescription>Por favor, insira sua senha novamente para confirmar.</FormDescription>
+                  <FormDescription>Por favor, insira sua senha  para confirmar.</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
