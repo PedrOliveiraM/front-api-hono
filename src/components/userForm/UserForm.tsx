@@ -2,9 +2,11 @@
 import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { UserService } from "@/services/UserService"
 import { pageTypes } from "@/utils/pageTypes"
 import { usePageType } from "@/utils/usePageType"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useParams } from "@tanstack/react-router"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
@@ -13,6 +15,8 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { userAddSchema, userEditSchema } from "./userSchema"
 
 export function UserForm() {
+  const { id } = useParams({ strict: false })
+
   const [typeForm] = useState(pageTypes[usePageType()]);
   const isCadastro = typeForm === "Cadastro";
 
@@ -22,6 +26,7 @@ export function UserForm() {
   const form = useForm<CurrentFormType>({
     resolver: zodResolver(currentSchema),
   });
+
 
   function onSubmit(values: CurrentFormType) {
     console.log(values);
@@ -40,6 +45,7 @@ export function UserForm() {
   return (
     <Card>
       <CardHeader>
+        <h1>Esse é o id: {id}</h1>
         <CardTitle>Formulário de {typeForm}</CardTitle>
         <CardDescription>{typeForm} de colaborador</CardDescription>
       </CardHeader>

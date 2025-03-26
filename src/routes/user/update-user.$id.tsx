@@ -1,7 +1,7 @@
 import { UserForm } from '@/components/userForm/UserForm'
 import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/user/update-user')({
+export const Route = createFileRoute('/user/update-user/$id')({
   component: UpdateUser,
 })
 

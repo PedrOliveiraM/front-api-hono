@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { makeData } from "@/mock/makeData";
+import { UserOrganizationDto } from "@/@types/user-organization/user-organization-dto";
+import { UserOrganizationService } from "@/services/UserOrganizationService";
+import { useQuery } from "@tanstack/react-query";
 import {
   Column,
   ColumnFiltersState,
@@ -11,11 +13,9 @@ import {
   getSortedRowModel,
   PaginationState,
   RowData,
-  // SortingState,
   useReactTable,
 } from "@tanstack/react-table";
-import { useEffect, useReducer, useState } from "react";
-import { Button } from "./ui/button";
+import { useEffect, useState } from "react";
 import { Input } from "./ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { columns } from "./user-columns-table";
@@ -26,14 +26,18 @@ declare module '@tanstack/react-table' {
   }
 }
 
-export function UserTable() {
-  const rerender = useReducer(() => ({}), {})[1];
-  const [data, setData] = useState(() => makeData(100000));
-  const refreshData = () => setData(() => makeData(100000));
+async function fetchUsersOrganizations() {
+  const { data } = await UserOrganizationService.getAllRelations()
+  return data
+}
 
-  // const [sorting, setSorting] = useState<SortingState>({});
+export function DataTable() {
+  const { data = [], isLoading, error } = useQuery<UserOrganizationDto[]>({
+    queryKey: ["users-organization"],
+    queryFn: fetchUsersOrganizations,
+  });
 
- const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
 
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -48,15 +52,18 @@ export function UserTable() {
       pagination,
       columnFilters,
     },
-  debugTable: true,
-  // onSortingChange: setSorting,
-  onColumnFiltersChange: setColumnFilters,
-  onPaginationChange: setPagination,
-  getCoreRowModel: getCoreRowModel(),
-  getSortedRowModel: getSortedRowModel(),
-  getFilteredRowModel: getFilteredRowModel(),
-  getPaginationRowModel: getPaginationRowModel(),
+    debugTable: true,
+    // onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+    onPaginationChange: setPagination,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
   });
+
+  if (isLoading) return <p>Carregando...</p>;
+  if (error) return <p>Erro ao carregar os dados!</p>;
 
   return (
     <div className="w-full p-5">
@@ -78,11 +85,11 @@ export function UserTable() {
                         </div>
                       )}
 
-                        {header.column.getCanFilter() ? (
-                          <div className="w-full">
-                            <Filter column={header.column} />
-                          </div>
-                        ) : null}     
+                      {header.column.getCanFilter() ? (
+                        <div className="w-full">
+                          <Filter column={header.column} />
+                        </div>
+                      ) : null}
                     </th>
                   ))}
                 </tr>
@@ -92,9 +99,8 @@ export function UserTable() {
               {table.getRowModel().rows.map((row, i) => (
                 <tr
                   key={row.id}
-                  className={`border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted ${
-                    i % 2 === 0 ? "bg-white" : "bg-muted/20"
-                  }`}
+                  className={`border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted ${i % 2 === 0 ? "bg-white" : "bg-muted/20"
+                    }`}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <td key={cell.id} className="p-4 align-middle [&:has([role=checkbox])]:pr-0">
@@ -251,22 +257,7 @@ export function UserTable() {
           </div>
         </div>
       </div>
-
-      {/* Action Buttons */}
-      <div className="mt-4 flex items-center space-x-4">
-        <Button
-        variant="destructive"
-          onClick={() => rerender()}
-        >
-         Forçar Atualização 
-        </Button>
-        <Button
-          onClick={() => refreshData()}
-          variant={"default"}>
-          Atualizar Dados
-        </Button>
-      </div>
-    </div>  
+    </div>
   );
 }
 
@@ -303,15 +294,15 @@ function Filter({ column }: { column: Column<any, unknown> }) {
       onValueChange={(value: string) => column.setFilterValue(value)}
       value={columnFilterValue?.toString()}
     >
-    <SelectTrigger className="w-[180px]">
+      <SelectTrigger className="w-[180px]">
         <SelectValue placeholder="Todos" />
-    </SelectTrigger>
+      </SelectTrigger>
 
-    <SelectContent>
-      <SelectItem value="all">Todos</SelectItem>
-      <SelectItem value="true">Ativo</SelectItem>
-      <SelectItem value="false">Inativo</SelectItem>
-    </SelectContent>
+      <SelectContent>
+        <SelectItem value="all">Todos</SelectItem>
+        <SelectItem value="true">Ativo</SelectItem>
+        <SelectItem value="false">Inativo</SelectItem>
+      </SelectContent>
     </Select>
   ) : (
     <DebouncedInput
@@ -349,7 +340,7 @@ function DebouncedInput({
 
   return (
     <div className="my-2">
-      <Input {...props} value={value} onChange={e => setValue(e.target.value)} className="w-full"/>
+      <Input {...props} value={value} onChange={e => setValue(e.target.value)} className="w-full" />
     </div>
   )
 }
