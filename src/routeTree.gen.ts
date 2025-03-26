@@ -12,8 +12,8 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as IndexImport } from './routes/index'
-import { Route as UserUpdateUserImport } from './routes/user/update-user'
 import { Route as UserCreateUserImport } from './routes/user/create-user'
+import { Route as UserUpdateUserIdImport } from './routes/user/update-user.$id'
 
 // Create/Update Routes
 
@@ -23,15 +23,15 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const UserUpdateUserRoute = UserUpdateUserImport.update({
-  id: '/user/update-user',
-  path: '/user/update-user',
-  getParentRoute: () => rootRoute,
-} as any)
-
 const UserCreateUserRoute = UserCreateUserImport.update({
   id: '/user/create-user',
   path: '/user/create-user',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const UserUpdateUserIdRoute = UserUpdateUserIdImport.update({
+  id: '/user/update-user/$id',
+  path: '/user/update-user/$id',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -53,11 +53,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UserCreateUserImport
       parentRoute: typeof rootRoute
     }
-    '/user/update-user': {
-      id: '/user/update-user'
-      path: '/user/update-user'
-      fullPath: '/user/update-user'
-      preLoaderRoute: typeof UserUpdateUserImport
+    '/user/update-user/$id': {
+      id: '/user/update-user/$id'
+      path: '/user/update-user/$id'
+      fullPath: '/user/update-user/$id'
+      preLoaderRoute: typeof UserUpdateUserIdImport
       parentRoute: typeof rootRoute
     }
   }
@@ -68,41 +68,41 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/user/create-user': typeof UserCreateUserRoute
-  '/user/update-user': typeof UserUpdateUserRoute
+  '/user/update-user/$id': typeof UserUpdateUserIdRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/user/create-user': typeof UserCreateUserRoute
-  '/user/update-user': typeof UserUpdateUserRoute
+  '/user/update-user/$id': typeof UserUpdateUserIdRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/user/create-user': typeof UserCreateUserRoute
-  '/user/update-user': typeof UserUpdateUserRoute
+  '/user/update-user/$id': typeof UserUpdateUserIdRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/user/create-user' | '/user/update-user'
+  fullPaths: '/' | '/user/create-user' | '/user/update-user/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/user/create-user' | '/user/update-user'
-  id: '__root__' | '/' | '/user/create-user' | '/user/update-user'
+  to: '/' | '/user/create-user' | '/user/update-user/$id'
+  id: '__root__' | '/' | '/user/create-user' | '/user/update-user/$id'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   UserCreateUserRoute: typeof UserCreateUserRoute
-  UserUpdateUserRoute: typeof UserUpdateUserRoute
+  UserUpdateUserIdRoute: typeof UserUpdateUserIdRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   UserCreateUserRoute: UserCreateUserRoute,
-  UserUpdateUserRoute: UserUpdateUserRoute,
+  UserUpdateUserIdRoute: UserUpdateUserIdRoute,
 }
 
 export const routeTree = rootRoute
@@ -117,7 +117,7 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/user/create-user",
-        "/user/update-user"
+        "/user/update-user/$id"
       ]
     },
     "/": {
@@ -126,8 +126,8 @@ export const routeTree = rootRoute
     "/user/create-user": {
       "filePath": "user/create-user.tsx"
     },
-    "/user/update-user": {
-      "filePath": "user/update-user.tsx"
+    "/user/update-user/$id": {
+      "filePath": "user/update-user.$id.tsx"
     }
   }
 }
